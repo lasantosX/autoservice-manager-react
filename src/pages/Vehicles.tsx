@@ -1,33 +1,72 @@
+import { useEffect, useState } from "react";
 import DataTable from "../components/DataTable";
+import { getVehiclesByCustomer } from "../api/vehicleService";
+import type { Vehicle } from "../types/vehicle";
 
-const vehicles = [
-  { vin: "1HGCM82633A004352", year: 2021, make: "Toyota", model: "Camry", customer: "Michael Johnson" },
-  { vin: "2FTRX18W1XCA01234", year: 2020, make: "Ford", model: "F-150", customer: "Sarah Connor" },
-  { vin: "3VWFE21C04M000001", year: 2019, make: "Honda", model: "Civic", customer: "Robert Miles" },
-];
+type VehicleRow = {
+  id: number;
+  vin: string;
+  make: string;
+  model: string;
+  year: number;
+};
 
 export default function Vehicles() {
+  const [vehicles, setVehicles] = useState<VehicleRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const loadVehicles = async () => {
+      try {
+        const data: Vehicle[] = await getVehiclesByCustomer(1);
+
+        const rows = data.map((v) => ({
+          id: v.vehicleId,
+          vin: v.vin,
+          make: v.make,
+          model: v.model,
+          year: v.year,
+        }));
+
+        setVehicles(rows);
+      } catch (err) {
+        console.error("Error loading vehicles:", err);
+        setError("Unable to load vehicles.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadVehicles();
+  }, []);
+
   return (
     <section className="page-section">
       <div className="page-header">
         <div>
           <p className="eyebrow">Vehicle Records</p>
           <h2>Vehicles</h2>
-          <p>Track vehicle information linked to customer service history.</p>
+          <p>Track vehicles from the API.</p>
         </div>
         <button className="primary-button">Add Vehicle</button>
       </div>
 
-      <DataTable
-        columns={[
-          { key: "vin", header: "VIN" },
-          { key: "year", header: "Year" },
-          { key: "make", header: "Make" },
-          { key: "model", header: "Model" },
-          { key: "customer", header: "Customer" },
-        ]}
-        data={vehicles}
-      />
+      {loading && <p>Loading vehicles...</p>}
+      {error && <p className="error-message">{error}</p>}
+
+      {!loading && !error && (
+        <DataTable
+          columns={[
+            { key: "id", header: "ID" },
+            { key: "vin", header: "VIN" },
+            { key: "make", header: "Make" },
+            { key: "model", header: "Model" },
+            { key: "year", header: "Year" },
+          ]}
+          data={vehicles}
+        />
+      )}
     </section>
   );
 }
