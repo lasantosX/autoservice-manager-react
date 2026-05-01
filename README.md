@@ -1,73 +1,95 @@
-# React + TypeScript + Vite
+# ?? AutoService Manager - React Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Modern React + TypeScript frontend for an automotive service management system.
 
-Currently, two official plugins are available:
+This project demonstrates a clean and scalable UI architecture connected to a real ASP.NET Core Web API for managing customers, vehicles, technicians, and service orders.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## ?? Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React + TypeScript
+- Vite
+- React Router
+- Axios
+- Lucide Icons
+- Custom CSS (no UI frameworks)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## ?? Features
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Dashboard with operational overview
+- Customer management (API integrated)
+- Vehicle tracking per customer
+- Technician management
+- Service Orders (Repair Orders) workflow
+- Reusable DataTable component
+- API integration with paginated responses
+- Clean layout with sidebar navigation
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## ?? Backend Integration
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+This frontend is fully connected to a custom ASP.NET Core Web API.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Key aspects:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- RESTful API consumption using Axios
+- Typed responses with TypeScript
+- Support for paginated responses (`items`, `totalCount`, etc.)
+- Service layer abstraction (`/api` folder)
+
+Example endpoints used:
+
+- `GET /api/Customers`
+- `GET /api/customers/{customerId}/vehicles`
+- `GET /api/Technicians`
+- `GET /api/ServiceOrders`
+
+---
+
+## ?? Architecture
+
+The project follows a modular and scalable structure:
+
+
+src/
+api/ ? API clients and services
+components/ ? Reusable UI components
+layouts/ ? Layout structure
+pages/ ? Application views
+routes/ ? Routing configuration
+styles/ ? Global styles
+types/ ? TypeScript models
+
+
+---
+
+## ?? Run Locally
+
+```bash
+npm install
+npm run dev
+?? Configuration
+
+Update the API base URL in:
+
+src/api/apiClient.ts
+baseURL: "https://localhost:44323/api"
+?? Notes
+This project is designed as a portfolio-ready frontend
+It reflects real-world patterns used in enterprise applications
+Focus is on architecture, integration, and clean UI
+????? Author
+
+Luis Santos
+Senior Software Developer (.NET / React / Vue / SQL Server)
+
+?? Next Improvements (Planned)
+Pagination controls in UI
+Create/Edit forms (CRUD)
+Environment variables (.env)
+Status mapping (numeric ? readable)
+Authentication (JWT)
