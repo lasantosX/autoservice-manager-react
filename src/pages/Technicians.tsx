@@ -1,32 +1,69 @@
+import { useEffect, useState } from "react";
 import DataTable from "../components/DataTable";
+import { getTechnicians } from "../api/technicianService";
+import type { Technician } from "../types/technician";
 
-const technicians = [
-  { name: "Daniel Rivera", specialty: "Engine Repair", activeOrders: 6, efficiency: "94%" },
-  { name: "Emily Parker", specialty: "Electrical Systems", activeOrders: 4, efficiency: "91%" },
-  { name: "Carlos Mendoza", specialty: "Transmission", activeOrders: 5, efficiency: "97%" },
-];
+type TechnicianRow = {
+  id: number;
+  name: string;
+  email: string;
+  status: string;
+};
 
 export default function Technicians() {
+  const [technicians, setTechnicians] = useState<TechnicianRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const loadTechnicians = async () => {
+      try {
+        const data: Technician[] = await getTechnicians();
+
+        setTechnicians(
+          data.map((t) => ({
+            id: t.technicianId,
+            name: t.fullName,
+            email: t.email,
+            status: t.isActive ? "Active" : "Inactive",
+          }))
+        );
+      } catch (err) {
+        console.error("Error loading technicians:", err);
+        setError("Unable to load technicians.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadTechnicians();
+  }, []);
+
   return (
     <section className="page-section">
       <div className="page-header">
         <div>
           <p className="eyebrow">Shop Management</p>
           <h2>Technicians</h2>
-          <p>Monitor technician workload, specialization, and performance.</p>
+          <p>Monitor technicians from the API.</p>
         </div>
         <button className="primary-button">Add Technician</button>
       </div>
 
-      <DataTable
-        columns={[
-          { key: "name", header: "Name" },
-          { key: "specialty", header: "Specialty" },
-          { key: "activeOrders", header: "Active Orders" },
-          { key: "efficiency", header: "Efficiency" },
-        ]}
-        data={technicians}
-      />
+      {loading && <p>Loading technicians...</p>}
+      {error && <p className="error-message">{error}</p>}
+
+      {!loading && !error && (
+        <DataTable
+          columns={[
+            { key: "id", header: "ID" },
+            { key: "name", header: "Name" },
+            { key: "email", header: "Email" },
+            { key: "status", header: "Status" },
+          ]}
+          data={technicians}
+        />
+      )}
     </section>
   );
 }

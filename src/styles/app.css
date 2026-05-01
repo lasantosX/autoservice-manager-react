@@ -288,3 +288,11 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+.error-message {
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 14px 16px;
+  border-radius: 14px;
+  font-weight: 700;
+}
